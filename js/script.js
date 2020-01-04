@@ -73,4 +73,32 @@
   }
   generateTags();
 
+  function tagClickHandler(event) {
+    event.preventDefault();
+    const clickedElement = this;
+    const href = clickedElement.getAttribute('href');
+    const tag = href.replace('#tag-', '');
+    const tagActiveLinks = document.querySelectorAll('a.active[href^="#tag-"]');
+
+    for (let tagActiveLink of tagActiveLinks) {
+      tagActiveLink.classList.remove('active');
+    }
+    /* find all tag links with "href" attribute equal to the "href" constant */
+    const tagLinks = document.querySelectorAll('a[href="' + href + '"]');
+
+    for (let tagLink of tagLinks) {
+      tagLink.classList.add('active');
+    }
+    /* execute function "generateTitleLinks" with article selector as argument */
+    generateTitleLinks('[data-tags~="' + tag + '" ]');
+  }
+  
+  function addClickListtenersToTag() {
+    const linksToTag = document.querySelectorAll('.post-tags .list a');
+
+    for (let linkToTag of linksToTag) {
+      linkToTag.addEventListener('click', tagClickHandler);
+    }
+  }
+  addClickListtenersToTag();
 }
