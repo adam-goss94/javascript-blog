@@ -6,7 +6,8 @@
     optArticleAuthorSelector = '.post-author',
     optArticleTagsSelector = '.post-tags .list',
     optCloudClassCount = 5,
-    optCloudClassPrefix = 'tag-size-';
+    optCloudClassPrefix = 'tag-size-',
+    optArticleAuthorAll = 'data-author';
 
   const titleClickHandler = function(event){
     event.preventDefault();
@@ -154,17 +155,34 @@
 
 
   function generateAuthors(){
+  
+    let allAuthors = {};
     const articles = document.querySelectorAll(optArticleSelector);
-  
     for(let article of articles){
-      const authors = article.querySelector(optArticleAuthorSelector);
+      let wrapperAuthors = article.querySelector(optArticleAuthorSelector);
       let html = '';
-      const articleAuthor = article.getAttribute('data-author');
-      const linkHTML = '<a href="#author-' + articleAuthor + '">' + articleAuthor + '</a>';
-      html = html + linkHTML;  
-  
-      authors.innerHTML = html;
+      const author = article.getAttribute(optArticleAuthorAll);
+      const linkHTML = '<a href="#author-' + author + '">' + author + '</a>';
+      html = html + linkHTML;
+    
+      if(!Object.prototype.hasOwnProperty.call(allAuthors, author)){
+        allAuthors[author] = 1;
+      }
+      else {
+        allAuthors[author]++;
+      }
+    
+      wrapperAuthors.innerHTML = html;
+      
     }
+    const allAuthorList = document.querySelector('.authors');
+    
+    let allAuthorsHTML = '';
+  
+    for(let authorLink in allAuthors)
+      allAuthorsHTML += '<li><a href="#author-' + authorLink + '">' + authorLink + ' (' + allAuthors[authorLink] + ')' + '</a></li>';
+  
+    allAuthorList.innerHTML = allAuthorsHTML;
   }
   generateAuthors();
 
