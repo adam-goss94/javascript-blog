@@ -1,5 +1,10 @@
 'use strict';
 {
+  const templates = {
+    articleLink: window.Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+    tagCloudLink: window.Handlebars.compile(document.querySelector('#template-tag-cloud-link').innerHTML),
+  };
+
   const optArticleSelector = '.post',
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
@@ -42,7 +47,8 @@
       /* find the title element and get the title from the title element */
       const articleTitle = article.querySelector(optTitleSelector).innerHTML;
       /* create HTML of the link */
-      const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+      const linkHTMLData = {id: articleId, title: articleTitle};
+      const linkHTML = templates.articleLink(linkHTMLData);
       /* insert link into variable */
       html = html + linkHTML;
     }
@@ -97,7 +103,8 @@
       const articleTagsArray = articleTags.split(' ');
 
       for(let tag of articleTagsArray){
-        const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li>';
+        const linkHTMLData = {id: 'tag-'+tag, title: tag};
+        const linkHTML = templates.articleLink(linkHTMLData);
         html = html + linkHTML;
 
         if(!Object.prototype.hasOwnProperty.call(allTags, tag)){
@@ -112,14 +119,17 @@
 
     const tagList = document.querySelector('.tags');
     const tagsParams = calculateTagsParams(allTags);
-    console.log('tagsParams:', tagsParams);
-    let allTagsHTML = '';
+    const allTagsData = {tags: []};
 
     for (let tag in allTags){
-      allTagsHTML += '<li><a class="'+calculateTagsClass(allTags[tag], tagsParams)+'" href="#tag-' + tag + '">'+tag+'(' + allTags[tag] + ')</li></a>';
+      allTagsData.tags.push({
+        tag: tag,
+        count: allTags[tag],
+        className: calculateTagsClass(allTags[tag], tagsParams)
+      });
     }
 
-    tagList.innerHTML = allTagsHTML;
+    tagList.innerHTML = templates.tagCloudLink(allTagsData);
 
   }
   generateTags();
@@ -162,7 +172,8 @@
       let wrapperAuthors = article.querySelector(optArticleAuthorSelector);
       let html = '';
       const author = article.getAttribute(optArticleAuthorAll);
-      const linkHTML = '<a href="#author-' + author + '">' + author + '</a>';
+      const linkHTMLData = {id: 'author-'+author, title: author};
+      const linkHTML = templates.articleLink(linkHTMLData);
       html = html + linkHTML;
     
       if(!Object.prototype.hasOwnProperty.call(allAuthors, author)){
