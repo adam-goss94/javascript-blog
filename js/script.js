@@ -5,12 +5,31 @@
     optTitleListSelector = '.titles',
     optArticleTagsSelector = '.post-tags .list';
 
+  const titleClickHandler = function(event){
+    event.preventDefault();
+  
+    const activeLinks = document.querySelectorAll('.titles a.active');
+    for(let activeLink of activeLinks){
+      activeLink.classList.remove('active');
+    }
+  
+    this.classList.add('active');
+  
+    const activeArticles = document.querySelectorAll('.posts article.active');
+    for(let activeArticle of activeArticles){
+      activeArticle.classList.remove('active');
+    }
+  
+    const articleSelector = this.getAttribute('href');
+    const targetArticle = document.querySelector(articleSelector);
+    targetArticle.classList.add('active');
+  };
 
-  const generateTitleLinks = () => {
+  function generateTitleLinks(customSelector = ''){
     /* remove contents of titleList */
     document.querySelector(optTitleListSelector).innerHTML = '';
     /* for each article */
-    const articles = document.querySelectorAll(optArticleSelector);
+    const articles = document.querySelectorAll(optArticleSelector + customSelector);
     let html = '';
     for(let article of articles){
       /* get the article id */
@@ -24,29 +43,13 @@
       html = html + linkHTML;
     }
     document.querySelector(optTitleListSelector).innerHTML = html;
-  };
-  generateTitleLinks();
 
-
-  const titleClickHandler = function(event){
-    event.preventDefault();
-
-    const activeLinks = document.querySelectorAll('.titles a.active');
-    for(let activeLink of activeLinks){
-      activeLink.classList.remove('active');
+    const links = document.querySelectorAll('.titles a');
+    for(let link of links){
+      link.addEventListener('click', titleClickHandler);
     }
-
-    this.classList.add('active');
-
-    const activeArticles = document.querySelectorAll('.posts article.active');
-    for(let activeArticle of activeArticles){
-      activeArticle.classList.remove('active');
-    }
-
-    const articleSelector = this.getAttribute('href');
-    const targetArticle = document.querySelector(articleSelector);
-    targetArticle.classList.add('active');
   };
+  generateTitleLinks();  
 
   const links = document.querySelectorAll('.titles a');
 
