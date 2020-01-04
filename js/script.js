@@ -188,12 +188,17 @@
     }
     const allAuthorList = document.querySelector('.authors');
     
-    let allAuthorsHTML = '';
+    const allAuthorsData = {tags: []};
   
-    for(let authorLink in allAuthors)
-      allAuthorsHTML += '<li><a href="#author-' + authorLink + '">' + authorLink + ' (' + allAuthors[authorLink] + ')' + '</a></li>';
-  
-    allAuthorList.innerHTML = allAuthorsHTML;
+    for(let authorLink in allAuthors){
+      allAuthorsData.tags.push({
+        tag: authorLink,
+        count: allAuthors[authorLink],
+        className: 'author-' + authorLink,
+      });            
+    }
+
+    allAuthorList.innerHTML = templates.tagCloudLink(allAuthorsData);
   }
   generateAuthors();
 
