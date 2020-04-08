@@ -1,7 +1,5 @@
 'use strict';
 {
-  const test = "test"
-  console.log(tes
   const templates = {
     articleLink: window.Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
     tagCloudLink: window.Handlebars.compile(document.querySelector('#template-tag-cloud-link').innerHTML),
